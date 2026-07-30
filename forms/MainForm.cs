@@ -168,7 +168,6 @@ namespace LethalSaveManager
         private void BackupSelectedGameSaveButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Backup selected game save button clicked");
-            string backupName = "";
 
             if (!Directory.Exists(CustomBackupDirectory))
             {
@@ -177,22 +176,20 @@ namespace LethalSaveManager
 
             DirectoryInfo backupDir = new DirectoryInfo(CustomBackupDirectory);
 
-            FileInfo[] files = backupDir.GetFiles();
-
-            backupName = "Backup " + (files.Count() + 1).ToString();
-
             // if file is already in the directory, increment the number untill the name is unique
-            int i = 1;
-            while (File.Exists(CustomBackupDirectory + backupName))
+            int backupNumber = backupDir.GetFiles().Length;
+            string backupPath;
+            do
             {
-                backupName = "Backup " + (files.Count() + i).ToString();
+                backupPath = Path.Combine(CustomBackupDirectory, "Backup " + (++backupNumber).ToString());
             }
+            while (File.Exists(backupPath));
 
-            File.Copy(gameSaveFileList.saveFileButtons[gameSaveFileList.selectedSaveFileIndex].filePath, CustomBackupDirectory + backupName);
+            File.Copy(gameSaveFileList.saveFileButtons[gameSaveFileList.selectedSaveFileIndex].filePath, backupPath);
 
             PopulateBackups();
 
-            backupSaveFileList.selectedSaveFileIndex = backupSaveFileList.saveFileButtons.FindIndex(x => x.filePath == CustomBackupDirectory + backupName);
+            backupSaveFileList.selectedSaveFileIndex = backupSaveFileList.saveFileButtons.FindIndex(x => x.filePath == backupPath);
         }
 
         private void LoadBackupButton_Click(object sender, EventArgs e)
