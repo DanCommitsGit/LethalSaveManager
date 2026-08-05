@@ -208,7 +208,7 @@ namespace LethalSaveManager.entity
                     {
                         MessageBox.Show("File does not exist.");
                     }
-                    refreshListCallback();
+                    RefreshPreservingSelection();
                 };
 
                 saveFileButton.Controls.Add(saveCreditsLabel);
@@ -228,6 +228,13 @@ namespace LethalSaveManager.entity
             selectedSaveFileIndex = selectedSaveFileIndex;
 
             lastButtonIndex++;
+        }
+
+        public void RefreshPreservingSelection()
+        {
+            string selectedFilePath = hasValidSelection ? saveFileButtons[_selectedSaveFileIndex].filePath : "";
+            refreshListCallback();
+            selectedSaveFileIndex = saveFileButtons.FindIndex(x => x.filePath == selectedFilePath);
         }
 
         public void Clear()
