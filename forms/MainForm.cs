@@ -149,8 +149,9 @@ namespace LethalSaveManager
 
             foreach (FileInfo item in dir.GetFiles())
             {
-                LCSave save = new(item.FullName);
-                save.Load(item.FullName);
+                if (!LCSave.TryLoad(item.FullName, out LCSave? save))
+                    continue;
+
                 backupSaveFileList.AddButton(item.FullName, item.Name, save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
             }
 

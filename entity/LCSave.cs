@@ -3,6 +3,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -265,6 +266,20 @@ namespace LethalSaveManager
 		public LCSave(string savePath)
 		{
 			Load(savePath);
+		}
+
+		public static bool TryLoad(string savePath, [NotNullWhen(true)] out LCSave? save)
+		{
+			try
+			{
+				save = new LCSave(savePath);
+				return true;
+			}
+			catch (Exception)
+			{
+				save = null;
+				return false;
+			}
 		}
 
 		internal void Load(string savePath)
