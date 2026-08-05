@@ -48,6 +48,10 @@ namespace LethalSaveManager.entity
                 }
             }
         }
+        public bool hasValidSelection
+        {
+            get { return _selectedSaveFileIndex >= 0 && _selectedSaveFileIndex < saveFileButtons.Count; }
+        }
         public List<SaveFileButton> saveFileButtons = [];
         int lastButtonIndex = 0;
         Action refreshListCallback;

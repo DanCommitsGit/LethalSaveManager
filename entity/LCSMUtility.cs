@@ -43,26 +43,12 @@ namespace LethalSaveManager.entity
 
         public static void RefreshActiveButton()
         {
-            if (MainForm.backupSaveFileList.selectedSaveFileIndex >= MainForm.backupSaveFileList.saveFileButtons.Count)
-            {
-                MainForm.instance.loadBackupButton.Enabled = false;
-                MainForm.instance.renameBackupButton.Enabled = false;
-            }
-            else
-            {
-                MainForm.instance.loadBackupButton.Enabled = true;
-                MainForm.instance.renameBackupButton.Enabled = true;
-            }
+            MainForm.instance.loadBackupButton.Enabled = MainForm.backupSaveFileList.hasValidSelection;
+            MainForm.instance.renameBackupButton.Enabled = MainForm.backupSaveFileList.hasValidSelection;
 
-            int selectedGameSaveIndex = MainForm.gameSaveFileList.selectedSaveFileIndex;
-            if (selectedGameSaveIndex >= MainForm.gameSaveFileList.saveFileButtons.Count)
-            {
-                MainForm.instance.backupSaveButton.Enabled = false;
-            }
-            else
-            {
-                MainForm.instance.backupSaveButton.Enabled = File.Exists(MainForm.gameSaveFileList.saveFileButtons[selectedGameSaveIndex].filePath);
-            }
+            BackupSaveFileList gameSaves = MainForm.gameSaveFileList;
+            MainForm.instance.backupSaveButton.Enabled = gameSaves.hasValidSelection
+                && File.Exists(gameSaves.saveFileButtons[gameSaves.selectedSaveFileIndex].filePath);
         }
     }
 }
