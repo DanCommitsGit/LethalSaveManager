@@ -79,6 +79,7 @@ namespace LethalSaveManager
                 gameSaveFileList.AddButton(GameSavePath + "LCSaveFile1", "File 1", "", "", "");
                 gameSaveFileList.AddButton(GameSavePath + "LCSaveFile2", "File 2", "", "", "");
                 gameSaveFileList.AddButton(GameSavePath + "LCSaveFile3", "File 3", "", "", "");
+                LCSMUtility.RefreshActiveButton();
                 return;
             }
             bool saveFile1Found = false;
@@ -129,6 +130,8 @@ namespace LethalSaveManager
             {
                 gameSaveFileList.AddButton(GameSavePath + "LCSaveFile3", "File 3", "", "", "");
             }
+
+            LCSMUtility.RefreshActiveButton();
         }
 
         private void PopulateBackups()

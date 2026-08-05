@@ -54,14 +54,14 @@ namespace LethalSaveManager.entity
                 MainForm.instance.renameBackupButton.Enabled = true;
             }
 
-            // Just in case
-            if (MainForm.gameSaveFileList.selectedSaveFileIndex >= MainForm.gameSaveFileList.saveFileButtons.Count)
+            int selectedGameSaveIndex = MainForm.gameSaveFileList.selectedSaveFileIndex;
+            if (selectedGameSaveIndex >= MainForm.gameSaveFileList.saveFileButtons.Count)
             {
                 MainForm.instance.backupSaveButton.Enabled = false;
             }
             else
             {
-                MainForm.instance.backupSaveButton.Enabled = true;
+                MainForm.instance.backupSaveButton.Enabled = File.Exists(MainForm.gameSaveFileList.saveFileButtons[selectedGameSaveIndex].filePath);
             }
         }
     }
