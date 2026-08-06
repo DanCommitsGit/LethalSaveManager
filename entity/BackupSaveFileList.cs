@@ -223,7 +223,7 @@ namespace LethalSaveManager.entity
 
             LCSMUtility.UseLethalCompanyFont(saveFileButton);
 
-            saveFileButtons.Add(new SaveFileButton(filePath, saveFileButton, saveCreditsLabel, saveQuotaLabel, saveDaysLabel, saveCreditsText, saveDaysText, saveQuotaText, deleteButton));
+            saveFileButtons.Add(new SaveFileButton(filePath, saveFileButton, saveCreditsLabel, saveQuotaLabel, saveDaysLabel, saveCreditsText, saveQuotaText, saveDaysText, deleteButton));
 
             selectedSaveFileIndex = selectedSaveFileIndex;
 
