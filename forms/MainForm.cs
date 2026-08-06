@@ -232,20 +232,51 @@ namespace LethalSaveManager
         {
             Console.WriteLine("Rename backup button clicked");
             FileInfo backup = new FileInfo(backupSaveFileList.saveFileButtons[backupSaveFileList.selectedSaveFileIndex].filePath);
-            if (backup.Exists)
+            if (!backup.Exists)
+                return;
+
+            string currentName = Uri.UnescapeDataString(backup.Name);
+            string newName = currentName;
+
+            while (true)
             {
-                RenameDialog renameDialog = new RenameDialog();
-                renameDialog.fileNameTextBox.Text = Uri.UnescapeDataString(backup.Name);
-                if (renameDialog.ShowDialog(this) == DialogResult.OK)
+                using RenameDialog renameDialog = new RenameDialog();
+                renameDialog.fileNameTextBox.Text = newName;
+                if (renameDialog.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                newName = renameDialog.fileNameTextBox.Text.Trim();
+                if (newName == currentName)
+                    return;
+
+                if (newName.Length == 0)
                 {
-                    string litteral = Uri.EscapeDataString(renameDialog.fileNameTextBox.Text);
-                    string newName = CustomBackupDirectory + litteral;
-                    if (!File.Exists(newName))
-                    {
-                        File.Move(backup.FullName, newName);
-                        PopulateBackups();
-                    }
+                    MessageBox.Show("Enter a name for the backup.", "Rename Backup");
+                    continue;
                 }
+
+                string newPath = Path.Combine(CustomBackupDirectory, Uri.EscapeDataString(newName));
+                bool nameTaken = File.Exists(newPath)
+                    && !string.Equals(newPath, backup.FullName, StringComparison.OrdinalIgnoreCase);
+                if (nameTaken)
+                {
+                    MessageBox.Show("A backup named \"" + newName + "\" already exists.", "Rename Backup");
+                    continue;
+                }
+
+                try
+                {
+                    File.Move(backup.FullName, newPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Could not rename the backup. " + ex.Message, "Rename Backup");
+                    continue;
+                }
+
+                PopulateBackups();
+                backupSaveFileList.selectedSaveFileIndex = backupSaveFileList.saveFileButtons.FindIndex(x => x.filePath == newPath);
+                return;
             }
         }
 
