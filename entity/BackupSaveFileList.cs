@@ -82,7 +82,7 @@ namespace LethalSaveManager.entity
             saveFileButton.Location = new Point(25, 67 + (100 * lastButtonIndex));
             saveFileButton.Name = "saveFileButton";
             saveFileButton.TabIndex = 43;
-            saveFileButton.Text = Uri.UnescapeDataString(name);
+            saveFileButton.Text = name;
             saveFileButton.TextAlign = ContentAlignment.MiddleLeft;
             saveFileButton.UseVisualStyleBackColor = false;
             saveFileButton.Click += (sender, e) =>

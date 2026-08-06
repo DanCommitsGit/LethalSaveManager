@@ -70,63 +70,16 @@ namespace LethalSaveManager
         {
             Console.WriteLine("Populating saves");
             gameSaveFileList.Clear();
-            DirectoryInfo saveDir = new DirectoryInfo(GameSavePath);
 
-            if (!saveDir.Exists)
+            for (int slot = 1; slot <= 3; slot++)
             {
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile1", "File 1", "", "", "");
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile2", "File 2", "", "", "");
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile3", "File 3", "", "", "");
-                LCSMUtility.RefreshActiveButton();
-                return;
-            }
-            bool saveFile1Found = false;
-            bool saveFile2Found = false;
-            bool saveFile3Found = false;
-            foreach (FileInfo item in saveDir.GetFiles())
-            {
-                if (item.Name == "LCSaveFile1")
-                {
-                    saveFile1Found = true;
-                }
-                else if (item.Name == "LCSaveFile2")
-                {
-                    saveFile2Found = true;
-                }
-                else if (item.Name == "LCSaveFile3")
-                {
-                    saveFile3Found = true;
-                }
-            }
-            if (saveFile1Found)
-            {
-                LCSave save = new(GameSavePath + "LCSaveFile1");
-                save.Load(GameSavePath + "LCSaveFile1");
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile1", "File 1", save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
-            }
-            else
-            {
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile1", "File 1", "", "", "");
-            }
-            if (saveFile2Found)
-            {
-                LCSave save = new(GameSavePath + "LCSaveFile2");
-                save.Load(GameSavePath + "LCSaveFile2");
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile2", "File 2", save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
-            }
-            else
-            {
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile2", "File 2", "", "", "");
-            }
-            if (saveFile3Found)
-            {
-                LCSave save = new(GameSavePath + "LCSaveFile3");
-                save.Load(GameSavePath + "LCSaveFile3");
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile3", "File 3", save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
-            }
-            else
-            {
-                gameSaveFileList.AddButton(GameSavePath + "LCSaveFile3", "File 3", "", "", "");
+                string savePath = GameSavePath + "LCSaveFile" + slot;
+                string slotName = "File " + slot;
+
+                if (LCSave.TryLoad(savePath, out LCSave? save))
+                    gameSaveFileList.AddButton(savePath, slotName, save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
+                else
+                    gameSaveFileList.AddButton(savePath, slotName, "", "", "");
             }
 
             LCSMUtility.RefreshActiveButton();
@@ -150,7 +103,7 @@ namespace LethalSaveManager
                 if (!LCSave.TryLoad(item.FullName, out LCSave? save))
                     continue;
 
-                backupSaveFileList.AddButton(item.FullName, item.Name, save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
+                backupSaveFileList.AddButton(item.FullName, BackupName.Decode(item.Name), save.credits.ToString(), save.daySpent.ToString(), save.quota.ToString());
             }
 
             if (backupSaveFileList.saveFileButtons.Count > 0)
@@ -183,7 +136,7 @@ namespace LethalSaveManager
             string backupPath;
             do
             {
-                backupPath = Path.Combine(CustomBackupDirectory, "Backup " + (++backupNumber).ToString());
+                backupPath = Path.Combine(CustomBackupDirectory, BackupName.Encode("Backup " + (++backupNumber).ToString()));
             }
             while (File.Exists(backupPath));
 
@@ -235,7 +188,7 @@ namespace LethalSaveManager
             if (!backup.Exists)
                 return;
 
-            string currentName = Uri.UnescapeDataString(backup.Name);
+            string currentName = BackupName.Decode(backup.Name);
             string newName = currentName;
 
             while (true)
@@ -255,7 +208,14 @@ namespace LethalSaveManager
                     continue;
                 }
 
-                string newPath = Path.Combine(CustomBackupDirectory, Uri.EscapeDataString(newName));
+                string fileName = BackupName.Encode(newName);
+                if (fileName.Length > BackupName.MaxFileNameLength)
+                {
+                    MessageBox.Show("Error: Entered name is too long.", "Rename Backup");
+                    continue;
+                }
+
+                string newPath = Path.Combine(CustomBackupDirectory, fileName);
                 bool nameTaken = File.Exists(newPath)
                     && !string.Equals(newPath, backup.FullName, StringComparison.OrdinalIgnoreCase);
                 if (nameTaken)

@@ -270,6 +270,10 @@ namespace LethalSaveManager
 
 		public static bool TryLoad(string savePath, [NotNullWhen(true)] out LCSave? save)
 		{
+			save = null;
+			if (!File.Exists(savePath))
+				return false;
+
 			try
 			{
 				save = new LCSave(savePath);
