@@ -46,6 +46,7 @@ namespace LethalSaveManager.entity
                         saveFileButtons[value].daysText.ForeColor = Color.FromArgb(77, 0, 20);
                     }
                 }
+                LCSMUtility.RefreshActiveButton();
             }
         }
         public bool hasValidSelection
@@ -87,7 +88,6 @@ namespace LethalSaveManager.entity
             saveFileButton.Click += (sender, e) =>
             {
                 selectedSaveFileIndex = lastButtonIndexCopy;
-                LCSMUtility.RefreshActiveButton();
             };
 
             for (int i = 20; i < saveFileButton.Text.Length; i += 20)

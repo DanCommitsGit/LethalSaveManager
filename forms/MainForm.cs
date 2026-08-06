@@ -57,8 +57,6 @@ namespace LethalSaveManager
 
             PopulateBackups();
 
-            LCSMUtility.RefreshActiveButton();
-
             Console.WriteLine("Lethal Company Save Manager started");
             backupSaveFilesPanel.VerticalScroll.Visible = false;
             /*string test = LCSecurity.Decrypt(File.ReadAllBytes(GameSavePath + PlayerSave));
