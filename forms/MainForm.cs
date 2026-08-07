@@ -1,6 +1,5 @@
 ﻿using LethalSaveManager.forms;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using LethalSaveManager.entity;
 using Microsoft.VisualBasic.FileIO;
@@ -24,8 +23,6 @@ namespace LethalSaveManager
         public static readonly string PlayerSave = "LCGeneralSaveData";
 
         public static LCPlayer PlayerInfo = new();
-        public static LCSave saveInfo = new();
-        public static LCSave BackupInfo = new();
 
         public static BackupSaveFileList backupSaveFileList;
         public static BackupSaveFileList gameSaveFileList;
@@ -58,11 +55,6 @@ namespace LethalSaveManager
             PopulateBackups();
 
             Console.WriteLine("Lethal Company Save Manager started");
-            backupSaveFilesPanel.VerticalScroll.Visible = false;
-            /*string test = LCSecurity.Decrypt(File.ReadAllBytes(GameSavePath + PlayerSave));
-			File.WriteAllText("corrupt.txt", test);*/
-            /*string test = LCSecurity.Decrypt(File.ReadAllBytes(CustomBackupDirectory + "LCBackup2"));
-			File.WriteAllText("backup.txt", test);*/
         }
 
         #region Loading and data
@@ -87,7 +79,6 @@ namespace LethalSaveManager
 
         private void PopulateBackups()
         {
-            backupSaveFilesPanel.VerticalScroll.Value = 0;
             Console.WriteLine("Populating backups");
             backupSaveFileList.Clear();
 
@@ -112,11 +103,6 @@ namespace LethalSaveManager
                 noBackupsFoundLabel.Visible = true;
 
             LCSMUtility.RefreshActiveButton();
-        }
-
-        private void LoadPlayerData()
-        {
-            PlayerInfo.Load();
         }
         #endregion
 
