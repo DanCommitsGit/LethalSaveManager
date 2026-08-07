@@ -1,23 +1,13 @@
-﻿using LethalSaveManager.entity;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace LethalSaveManager
+namespace LethalSaveManager.entity
 {
-	public class LCSave : ISaveInterface
+	public class LCSave : SaveFile
 	{
-		public string saveData { get; set; } = "";
-
 		#region SaveAttributes
 		// attributes of the save files, do not modify unless the savedata changes
 		public static readonly string Credits = "GroupCredits"; // Social credits
@@ -45,223 +35,26 @@ namespace LethalSaveManager
 		public bool isModded { get { return gameVer == 9999; } }
 
 		#region Single values
-		private int _credits;
-		public int credits
-		{
-			get
-			{
-				return _credits;
-			}
-
-			set
-			{
-				_credits = value;
-				WriteToAttribute(Credits, value.ToString());
-			}
-		}
-		private int _planetSeed;
-		public int planetSeed
-		{
-			get
-			{
-				return _planetSeed;
-			}
-
-			set
-			{
-				_planetSeed = value;
-				WriteToAttribute(PlanetSeed, value.ToString());
-			}
-		}
-		private int _deadline;
-		public int deadline
-		{
-			get
-			{
-				return _deadline;
-			}
-
-			set
-			{
-				_deadline = value;
-				WriteToAttribute(Deadline, value.ToString());
-			}
-		}
-		private int _planet;
-		public int planet
-		{
-			get
-			{
-				return _planet;
-			}
-
-			set
-			{
-				_planet = value;
-				WriteToAttribute(Planet, value.ToString());
-			}
-		}
-		private int _quota;
-		public int quota
-		{
-			get
-			{
-				return _quota;
-			}
-
-			set
-			{
-				_quota = value;
-				WriteToAttribute(Quota, value.ToString());
-			}
-		}
-		private int _quotasPassed;
-		public int quotasPassed
-		{
-			get
-			{
-				return _quotasPassed;
-			}
-
-			set
-			{
-				_quotasPassed = value;
-				WriteToAttribute(QuotasPassed, value.ToString());
-			}
-		}
-		private int _quotasFullfilled;
-		public int quotaFulfilled
-		{
-			get
-			{
-				return _quotasFullfilled;
-			}
-
-			set
-			{
-				_quotasFullfilled = value;
-				WriteToAttribute(QuotaFulfilled, value.ToString());
-			}
-		}
-		private int _time;
-		public int time
-		{
-			get
-			{
-				return _time;
-			}
-
-			set
-			{
-				_time = value;
-				WriteToAttribute(Time, value.ToString());
-			}
-		}
-		private int _gameVer = 45;
-		public int gameVer
-		{
-			get
-			{
-				return _gameVer;
-			}
-
-			set
-			{
-				_gameVer = value;
-				WriteToAttribute(GameVer, value.ToString());
-			}
-		}
-		private int _valueCollected;
-		public int valueCollected
-		{
-			get
-			{
-				return _valueCollected;
-			}
-
-			set
-			{
-				_valueCollected = value;
-				WriteToAttribute(ValueCollected, value.ToString());
-			}
-		}
-		private int _daySpent;
-		public int daySpent
-		{
-			get
-			{
-				return _daySpent;
-			}
-
-			set
-			{
-				_daySpent = value;
-				WriteToAttribute(DaySpent, value.ToString());
-			}
-		}
+		public int credits { get; private set; }
+		public int planetSeed { get; private set; }
+		public int deadline { get; private set; }
+		public int planet { get; private set; }
+		public int quota { get; private set; }
+		public int quotasPassed { get; private set; }
+		public int quotaFulfilled { get; private set; }
+		public int time { get; private set; }
+		public int gameVer { get; private set; }
+		public int valueCollected { get; private set; }
+		public int daySpent { get; private set; }
 		#endregion
 
 		#region Array values
-		private int[] _shipScrapValues;
-		public int[] shipScrapValues
-		{
-			get
-			{
-				return _shipScrapValues;
-			}
-
-			set
-			{
-				_shipScrapValues = value;
-				WriteArrayToAttribute(ShipScrapValues, value);
-			}
-		}
-		private int[] _unlockedObjects;
-		public int[] unlockedShipObjects
-		{
-			get
-			{
-				return _unlockedObjects;
-			}
-
-			set
-			{
-				_unlockedObjects = value;
-				WriteArrayToAttribute(UnlockedShipObjects, value);
-			}
-		}
-		private int[] _shipGrabbableItems;
-		public int[] shipGrabbableItems
-		{
-			get
-			{
-				return _shipGrabbableItems;
-			}
-
-			set
-			{
-				_shipGrabbableItems = value;
-				WriteArrayToAttribute(ShipGrabbableItems, value);
-			}
-		}
-		private UnityVector[] _shipGrabbableItemPos;
-		public UnityVector[] shipGrabbableItemPos
-		{
-			get
-			{
-				return _shipGrabbableItemPos;
-			}
-
-			set
-			{
-				_shipGrabbableItemPos = value;
-				WriteArrayToAttribute(ShipGrabbableItemPos, value);
-			}
-		}
+		public int[] shipScrapValues { get; private set; } = [];
+		public int[] unlockedShipObjects { get; private set; } = [];
+		public int[] shipGrabbableItems { get; private set; } = [];
+		public UnityVector[] shipGrabbableItemPos { get; private set; } = [];
 		#endregion
 		#endregion
-
-		public LCSave() { }
 
 		public LCSave(string savePath)
 		{
@@ -286,183 +79,82 @@ namespace LethalSaveManager
 			}
 		}
 
-		internal void Load(string savePath)
+		private void Load(string savePath)
 		{
-			FileInfo SaveFile = new FileInfo(savePath);
-			if (!SaveFile.Exists) { return; }
-
-			saveData = LCSecurity.Decrypt(File.ReadAllBytes(SaveFile.ToString()));
-
-			int titi;
+			saveData = LCSecurity.Decrypt(File.ReadAllBytes(savePath));
 
 			#region Single Value Get
-			credits = int.TryParse(GetDataFromSave(Credits), out titi) ? titi : 60;
-			planetSeed = int.TryParse(GetDataFromSave(PlanetSeed), out titi) ? titi : 0;
-			deadline = int.TryParse(GetDataFromSave(Deadline), out titi) ? titi : 3;
-			planet = int.TryParse(GetDataFromSave(Planet), out titi) ? titi : 8;
-			quota = int.TryParse(GetDataFromSave(Quota), out titi) ? titi : 130;
-			quotasPassed = int.TryParse(GetDataFromSave(QuotasPassed), out titi) ? titi : 0;
-			quotaFulfilled = int.TryParse(GetDataFromSave(QuotaFulfilled), out titi) ? titi : 0;
-			time = int.TryParse(GetDataFromSave(Time), out titi) ? titi : 3000;
-			gameVer = int.TryParse(GetDataFromSave(GameVer), out titi) ? titi : 45;
-			valueCollected = int.TryParse(GetDataFromSave(ValueCollected), out titi) ? titi : 0;
-			daySpent = int.TryParse(GetDataFromSave(DaySpent), out titi) ? titi : 0;
-
+			credits = ReadInt(Credits, 60);
+			planetSeed = ReadInt(PlanetSeed, 0);
+			deadline = ReadInt(Deadline, 3);
+			planet = ReadInt(Planet, 8);
+			quota = ReadInt(Quota, 130);
+			quotasPassed = ReadInt(QuotasPassed, 0);
+			quotaFulfilled = ReadInt(QuotaFulfilled, 0);
+			time = ReadInt(Time, 3000);
+			gameVer = ReadInt(GameVer, 45);
+			valueCollected = ReadInt(ValueCollected, 0);
+			daySpent = ReadInt(DaySpent, 0);
 			#endregion
 
 			#region Multiple Value Get
-			shipScrapValues = GetIdsFromValues(GetValuesFromString(GetDataFromSave(ShipScrapValues)));
-			unlockedShipObjects = GetIdsFromValues(GetValuesFromString(GetDataFromSave(UnlockedShipObjects)));
-			shipGrabbableItems = GetIdsFromValues(GetValuesFromString(GetDataFromSave(ShipGrabbableItems)));
-			shipGrabbableItemPos = GetVectorFromSaveData(ShipGrabbableItemPos);
+			shipScrapValues = ReadIds(ShipScrapValues);
+			unlockedShipObjects = ReadIds(UnlockedShipObjects);
+			shipGrabbableItems = ReadIds(ShipGrabbableItems);
+			shipGrabbableItemPos = ReadVectors(ShipGrabbableItemPos);
 			#endregion
 		}
 
-		public string[] GetValuesFromString(string values)
+		private int[] ReadIds(string attribute)
 		{
-			if (values == null || values.Length == 0) return null;
-			// Remove '[' and ']' at the beginning and ending of the string
-			values = values.Remove(0, 1);
-			values = values.Remove(values.Length - 1, 1);
+			List<int> ids = new List<int>();
 
-			string[] result = values.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-			return result;
-		}
-
-		public int[] GetIdsFromValues(string[] values)
-		{
-			if (values == null || values.Length == 0) return null;
-			int[] result = new int[values.Length + 1];
-			int index = 0;
-
-			foreach (string value in values)
+			foreach (string value in ReadAttribute(attribute).Trim('[', ']').Split(',', StringSplitOptions.RemoveEmptyEntries))
 			{
-				if (String.IsNullOrEmpty(value) || value.Length > 9) continue;
-				result[index] = int.Parse(value);
-				index++;
+				if (int.TryParse(value, out int id))
+					ids.Add(id);
 			}
 
-			return result;
+			return ids.ToArray();
 		}
 
-		//"value":[{"x":6.69129372,"y":2.10340214,"z":-11.4520636},{"x":4.01256371,"y":0.341714382,"z":-13.9975548},{"x":-3.30840683,"y":0.3362217,"z":-14.2954359},{"x":-2.48205948,"y":2.51881552,"z":-12.63819},
-		//{"x":9.595259,"y":1.49462366,"z":-12.9279337},{"x":4.92151833,"y":0.541714668,"z":-12.3918781},{"x":7.31608,"y":2.10340214,"z":-11.5677242},{"x":7.455637,"y":2.123402,"z":-11.5858059},
-		//{"x":7.37245369,"y":2.10340214,"z":-11.63424},{"x":4.802082,"y":0.7417145,"z":-12.491188}]}
-		public UnityVector[] GetVectorFromSaveData(string attribute)
+		// The vectors sit inside braces of their own, so ReadAttribute stops short of the closing bracket
+		//"value":[{"x":6.69129372,"y":2.10340214,"z":-11.4520636},{"x":4.01256371,"y":0.341714382,"z":-13.9975548}]
+		private UnityVector[] ReadVectors(string attribute)
 		{
-			if (!saveData.Contains(attribute))
-				return null;
-			int first = saveData.IndexOf(attribute) + attribute.Length + 2;
+			int attributeStart = saveData.IndexOf(attribute);
+			if (attributeStart < 0)
+				return [];
 
-			string tempStr = saveData.Substring(first, saveData.Length - first);
-			tempStr = tempStr.Substring(0, tempStr.IndexOf("}]}") - 1);
-			string resultStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 9, tempStr.Length - (tempStr.IndexOf("\"value\":") + 9));
+			int arrayStart = saveData.IndexOf('[', attributeStart);
+			int arrayEnd = saveData.IndexOf(']', attributeStart);
+			if (arrayStart < 0 || arrayEnd < arrayStart)
+				return [];
 
-			string[] values = resultStr.Split(',');
+			List<UnityVector> vectors = new List<UnityVector>();
 
-			if (values == null || values.Length == 0) return null;
-			UnityVector[] result = new UnityVector[values.Length + 1];
-			int resIndex = 0;
-
-			try
+			foreach (string entry in saveData.Substring(arrayStart + 1, arrayEnd - arrayStart - 1).Split('}', StringSplitOptions.RemoveEmptyEntries))
 			{
-				for (int i = 0; i < values.Length; i++)
-				{
-					UnityVector v = new UnityVector();
-					string valStr = "";
-					switch (i % 3)
-					{
-						case 0:
-							valStr = values[i].Remove(0, 5).Trim();
-							v.x = float.Parse(valStr, CultureInfo.InvariantCulture);
-							break;
-						case 1:
-							valStr = values[i].Remove(0, 4).Trim();
-							v.y = float.Parse(valStr, CultureInfo.InvariantCulture);
-							break;
-						case 2:
-							valStr = values[i].Remove(0, 4).Trim();
-							valStr = valStr.Remove(valStr.Length - 1, 1);
-							v.z = float.Parse(valStr, CultureInfo.InvariantCulture);
-							result[resIndex] = v;
-							resIndex++;
-							break;
-						default:
-							Debug.WriteLine("BUG in GetVectorFromSaveData switch at " + i + "(Remainder:" + i % 3 + ")" + ":" + values[i]);
-							break;
+				string[] components = entry.Trim(',', '{').Split(',');
+				UnityVector vector = new UnityVector();
 
-					}
-				}
-			}
-			catch (Exception)
-			{
-				Debug.WriteLine("Fuck this shit I'm out");
+				if (components.Length == 3
+					&& TryReadComponent(components[0], out vector.x)
+					&& TryReadComponent(components[1], out vector.y)
+					&& TryReadComponent(components[2], out vector.z))
+					vectors.Add(vector);
 			}
 
-			return result;
+			return vectors.ToArray();
 		}
 
-		public string WriteArrayToAttribute(string attribute, Array values)
+		private static bool TryReadComponent(string component, out float value)
 		{
-			if (!saveData.Contains(attribute)) return "";
-			if (values == null) return null;
+			value = 0;
+			int separator = component.IndexOf(':');
 
-			int firstIndexOfAttribute = saveData.IndexOf(attribute) + attribute.Length;
-
-			string tempStr = saveData.Substring(firstIndexOfAttribute, saveData.Length - firstIndexOfAttribute);
-
-			int firstIndexOfValue = firstIndexOfAttribute + tempStr.IndexOf("\"value\":") + 8;
-
-			tempStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 8, tempStr.Length - (tempStr.IndexOf("\"value\":") + 8));
-			tempStr = tempStr.Substring(0, tempStr.IndexOf('}'));
-
-			saveData = saveData.Remove(firstIndexOfValue, tempStr.Length);
-
-			string newValue = "[";
-			foreach (var value in values)
-			{
-				if (value == null) continue;
-                newValue += value.ToString() + ',';
-			}
-			newValue += ']';
-
-			saveData = saveData.Insert(firstIndexOfValue, newValue);
-
-			return saveData;
-		}
-
-		public string GetDataFromSave(string attribute)
-		{
-			if (!saveData.Contains(attribute))
-				return "";
-			int first = saveData.IndexOf(attribute) + attribute.Length + 2;
-
-			string tempStr = saveData.Substring(first, saveData.Length - first);
-			tempStr = tempStr.Substring(0, tempStr.IndexOf('}'));
-			string resultStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 8, tempStr.Length - (tempStr.IndexOf("\"value\":") + 8));
-
-			return resultStr;
-		}
-
-		public string WriteToAttribute(string attribute, string newValue)
-		{
-			if (!saveData.Contains(attribute))
-				return "";
-
-			int firstIndexOfAttribute = saveData.IndexOf(attribute) + attribute.Length;
-
-			string tempStr = saveData.Substring(firstIndexOfAttribute, saveData.Length - firstIndexOfAttribute);
-
-			int firstIndexOfValue = firstIndexOfAttribute + tempStr.IndexOf("\"value\":") + 8;
-
-			tempStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 8, tempStr.Length - (tempStr.IndexOf("\"value\":") + 8));
-			tempStr = tempStr.Substring(0, tempStr.IndexOf('}'));
-
-			saveData = saveData.Remove(firstIndexOfValue, tempStr.Length);
-			saveData = saveData.Insert(firstIndexOfValue, newValue);
-
-			return saveData;
+			return separator >= 0
+				&& float.TryParse(component.Substring(separator + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
 		}
 	}
 }

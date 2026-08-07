@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LethalSaveManager
+namespace LethalSaveManager.entity
 {
-	public class LCPlayer : ISaveInterface
+	public class LCPlayer : SaveFile
 	{
-		public string saveData = "";
-
 		#region SaveAttributes
 		// attributes of the player file
 		public static readonly string LastSelectedFile = "SelectedFile"; //int
@@ -27,115 +19,14 @@ namespace LethalSaveManager
 		#endregion
 
 		#region SaveProperties
-		private int _lastSelectedFile;
-		public int lastSelectedFile {  
-			get {
-				return _lastSelectedFile;
-			} 
-
-			set { 
-			_lastSelectedFile = value;
-				WriteToAttribute(LastSelectedFile, value.ToString());
-			} 
-		}
-		private int _lastPlayedVersion;
-		public int lastPlayedVersion
-		{
-			get
-			{
-				return _lastPlayedVersion;
-			}
-
-			set
-			{
-				_lastPlayedVersion = value;
-				WriteToAttribute(LastPlayedVersion, value.ToString());
-			}
-		}
-		private int _playerXP;
-		public int playerXP
-		{
-			get
-			{
-				return _playerXP;
-			}
-
-			set
-			{
-				WriteToAttribute(PlayerXP, value.ToString());
-				_playerXP = value;
-			}
-		}
-		private int _playerLevel;
-		public int playerLevel
-		{
-			get
-			{
-				return _playerLevel;
-			}
-
-			set
-			{
-				_playerLevel = value;
-				WriteToAttribute(PlayerLevel, value.ToString());
-			}
-		}
-		private bool _playerFinishedSetup;
-		public bool playerFinishedSetup
-		{
-			get
-			{
-				return _playerFinishedSetup;
-			}
-
-			set
-			{
-				_playerFinishedSetup = value;
-				WriteToAttribute(PlayerFinishedSetup, value.ToString().ToLowerInvariant());
-			}
-		}
-		private bool _hasUsedTerminal;
-		public bool hasUsedTerminal
-		{
-			get
-			{
-				return _hasUsedTerminal;
-			}
-
-			set
-			{
-				_hasUsedTerminal = value;
-				WriteToAttribute(HasUsedTerminal, value.ToString().ToLowerInvariant());
-			}
-		}
-		private int _finishedShockMinigame;
-		public int finishedShockMinigame
-		{
-			get
-			{
-				return _finishedShockMinigame;
-			}
-
-			set
-			{
-				_finishedShockMinigame = value;
-				WriteToAttribute(FinishedShockMinigame, value.ToString());
-			}
-		}
-		private int _timesLanded;
-		public int timesLanded
-		{
-			get
-			{
-				return _timesLanded;
-			}
-
-			set
-			{
-				_timesLanded = value;
-				WriteToAttribute(TimesLanded, value.ToString());
-			}
-		}
+		public int lastSelectedFile { get; private set; }
+		public int lastPlayedVersion { get; private set; }
+		public int playerXP { get; private set; }
+		public int playerLevel { get; private set; }
+		public bool playerFinishedSetup { get; private set; }
+		public bool hasUsedTerminal { get; private set; }
+		public int finishedShockMinigame { get; private set; }
+		public int timesLanded { get; private set; }
 		#endregion
 
 		public LCPlayer()
@@ -143,71 +34,22 @@ namespace LethalSaveManager
 			Load();
 		}
 
-		public void Load()
+		private void Load()
 		{
-			FileInfo PlayerSaveFile = new FileInfo(MainForm.GameSavePath + MainForm.PlayerSave);
-			if (!PlayerSaveFile.Exists) { return; }
+			string playerSavePath = MainForm.GameSavePath + MainForm.PlayerSave;
+			if (!File.Exists(playerSavePath))
+				return;
 
-			bool boul = false;
-			int ount = 1;
+			saveData = LCSecurity.Decrypt(File.ReadAllBytes(playerSavePath));
 
-			saveData = LCSecurity.Decrypt(File.ReadAllBytes(PlayerSaveFile.ToString()));
-
-			lastSelectedFile = int.TryParse(GetDataFromSave(LastSelectedFile), out ount) ? ount : 1;
-			lastPlayedVersion = int.TryParse(GetDataFromSave(LastPlayedVersion), out ount) ? ount : 45;
-			playerXP = int.TryParse(GetDataFromSave(PlayerXP), out ount) ? ount : 0;
-			playerLevel = int.TryParse(GetDataFromSave(PlayerLevel), out ount) ? ount : 0;
-			playerFinishedSetup = bool.TryParse(GetDataFromSave(PlayerFinishedSetup), out boul) ? boul : false;
-			hasUsedTerminal = bool.TryParse(GetDataFromSave(HasUsedTerminal), out boul) ? boul : false;
-			finishedShockMinigame = int.TryParse(GetDataFromSave(FinishedShockMinigame), out ount) ? ount : 0;
-			timesLanded = int.TryParse(GetDataFromSave(TimesLanded), out ount) ? ount : 0;
-		}
-
-		/// <summary>
-		/// Gets the value of the attribute from the save file
-		/// </summary>
-		public string GetDataFromSave(string attribute)
-		{
-			if (!saveData.Contains(attribute))
-				return "";
-			int first = saveData.IndexOf(attribute) + attribute.Length + 2;
-
-			string tempStr = saveData.Substring(first, saveData.Length - first);
-			tempStr = tempStr.Substring(0, tempStr.IndexOf('}'));
-			string resultStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 8, tempStr.Length - (tempStr.IndexOf("\"value\":") + 8));
-
-			return resultStr;
-		}
-
-		/// <summary>
-		/// Writes a new value to the attribute in the save file
-		/// </summary>
-		public string WriteToAttribute(string attribute, string newValue)
-		{
-			if (!saveData.Contains(attribute))
-				return "";
-
-			int firstIndexOfAttribute = saveData.IndexOf(attribute) + attribute.Length;
-
-			string tempStr = saveData.Substring(firstIndexOfAttribute, saveData.Length - firstIndexOfAttribute);
-
-			int firstIndexOfValue = firstIndexOfAttribute + tempStr.IndexOf("\"value\":") + 8;
-
-			try
-			{
-				tempStr = tempStr.Substring(tempStr.IndexOf("\"value\":") + 8, tempStr.Length - (tempStr.IndexOf("\"value\":") + 8));
-				tempStr = tempStr.Substring(0, tempStr.IndexOf('}'));
-
-				saveData = saveData.Remove(firstIndexOfValue, tempStr.Length);
-				saveData = saveData.Insert(firstIndexOfValue, newValue);
-
-				return saveData;
-			}
-			catch (Exception)
-			{
-				return "";
-				throw;
-			}
+			lastSelectedFile = ReadInt(LastSelectedFile, 1);
+			lastPlayedVersion = ReadInt(LastPlayedVersion, 45);
+			playerXP = ReadInt(PlayerXP, 0);
+			playerLevel = ReadInt(PlayerLevel, 0);
+			playerFinishedSetup = ReadBool(PlayerFinishedSetup);
+			hasUsedTerminal = ReadBool(HasUsedTerminal);
+			finishedShockMinigame = ReadInt(FinishedShockMinigame, 0);
+			timesLanded = ReadInt(TimesLanded, 0);
 		}
 	}
 }
