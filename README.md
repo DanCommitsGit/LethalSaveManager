@@ -9,20 +9,20 @@ LethalSaveManager is a save manager for the game [*Lethal Company*](https://stor
 - Built using C#, .NET 8, and WinForms for a robust and user-friendly experience.
 
 ## Installation 🔧
-You can download the latest standalone executable from the [releases page](https://github.com/DJ13423/LethalSaveManager/releases/latest).
+You can download the latest standalone executable from the [releases page](https://github.com/DanCommitsGit/LethalSaveManager/releases/latest).
 
 ## Usage 🚀
-1. Download the `exe` from the [releases page](https://github.com/DJ13423/LethalSaveManager/releases/latest).
+1. Download the `exe` from the [releases page](https://github.com/DanCommitsGit/LethalSaveManager/releases/latest).
 2. Run the standalone executable.
 3. Use the interface to manage your game saves.
 
 ## Screenshot 📸
-![UI Screenshot](https://github.com/DJ13423/LethalSaveManager/assets/61391827/377ec5f5-50bd-4c18-ae91-c49461d47bee)
+![UI Screenshot](https://github.com/DanCommitsGit/LethalSaveManager/assets/61391827/377ec5f5-50bd-4c18-ae91-c49461d47bee)
 
 ## Contributors 👥
-- [**DJ13423**](https://github.com/DJ13423)
+- [**DanCommitsGit**](https://github.com/DanCommitsGit)
 
-This project is forked from [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager).
+Originally based on [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager).
 
 ## License 📜
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -32,5 +32,5 @@ Contributions are welcome! If you have suggestions for improvements or find any 
 
 ## Download Count
 
-![GitHub release (v1)](https://img.shields.io/github/downloads/DJ13423/LethalSaveManager/v1/total)
-![GitHub release (v2)](https://img.shields.io/github/downloads/DJ13423/LethalSaveManager/v2/total)
+![GitHub release (v1)](https://img.shields.io/github/downloads/DanCommitsGit/LethalSaveManager/v1/total)
+![GitHub release (v2)](https://img.shields.io/github/downloads/DanCommitsGit/LethalSaveManager/v2/total)
