@@ -57,6 +57,12 @@ namespace LethalSaveManager
             Console.WriteLine("Lethal Company Save Manager started");
         }
 
+        private void FitBackupListToViewport(object? sender, EventArgs e)
+        {
+            int scrollBarWidth = backupSaveFilesPanel.Width - backupSaveFilesPanel.ClientSize.Width;
+            backupSaveFilesPanel.Size = new Size(backupSaveFilesViewport.ClientSize.Width + scrollBarWidth, backupSaveFilesViewport.ClientSize.Height);
+        }
+
         #region Loading and data
         private void PopulateSaves()
         {

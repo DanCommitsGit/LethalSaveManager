@@ -65,6 +65,8 @@ namespace LethalSaveManager.entity
             this.rightMargin = rightMargin;
         }
 
+        int Scaled(int designPixels) => (int)Math.Round(designPixels * (parent.DeviceDpi / 96f));
+
         public void AddButton(string filePath, string name, string credits, string days, string quota)
         {
             int lastButtonIndexCopy = lastButtonIndex;
@@ -78,8 +80,8 @@ namespace LethalSaveManager.entity
             saveFileButton.Font = new Font("Microsoft Sans Serif", 25 - Math.Min(name.Length * 0.5f, 10), FontStyle.Bold, GraphicsUnit.Point, 0);
             saveFileButton.ForeColor = Color.FromArgb(211, 63, 35);
             saveFileButton.ImageAlign = ContentAlignment.TopCenter;
-            saveFileButton.Size = new Size(parent.Width - 100 - rightMargin, 90);
-            saveFileButton.Location = new Point(25, 67 + (100 * lastButtonIndex));
+            saveFileButton.Size = new Size(parent.ClientSize.Width - Scaled(100 + rightMargin), Scaled(90));
+            saveFileButton.Location = new Point(Scaled(25), Scaled(67) + (Scaled(100) * lastButtonIndex));
             saveFileButton.Name = "saveFileButton";
             saveFileButton.TabIndex = 43;
             saveFileButton.Text = name;
@@ -106,84 +108,46 @@ namespace LethalSaveManager.entity
 
             if (credits != "" && days != "" && quota != "")
             {
-                int labelsX = saveFileButton.Size.Width - 180;
-                int valuesX = saveFileButton.Size.Width - 80;
+                Label NewStatLabel(string text)
+                {
+                    Label statLabel = new Label();
+                    statLabel.Anchor = AnchorStyles.Left;
+                    statLabel.AutoSize = true;
+                    statLabel.BackColor = Color.Transparent;
+                    statLabel.Font = new Font("Segoe UI", 15F);
+                    statLabel.ForeColor = Color.FromArgb(77, 0, 20);
+                    statLabel.Margin = new Padding(Scaled(3), Scaled(2), Scaled(3), Scaled(2));
+                    statLabel.Text = text;
+                    statLabel.TextAlign = ContentAlignment.MiddleLeft;
+                    return statLabel;
+                }
 
-                int creditsY = 0;
-                int quotaY = 30;
-                int daysY = 60;
+                saveCreditsLabel = NewStatLabel("Credits:");
+                saveQuotaLabel = NewStatLabel("Quota:");
+                saveDaysLabel = NewStatLabel("Days:");
+                saveCreditsText = NewStatLabel(credits);
+                saveQuotaText = NewStatLabel(quota);
+                saveDaysText = NewStatLabel(days);
 
-                saveCreditsLabel = new Label();
-                saveCreditsLabel.AutoSize = true;
-                saveCreditsLabel.BackColor = Color.Transparent;
-                saveCreditsLabel.Font = new Font("Segoe UI", 15F);
-                saveCreditsLabel.ForeColor = Color.FromArgb(77, 0, 20);
-                saveCreditsLabel.Location = new Point(labelsX, creditsY);
-                saveCreditsLabel.Name = "saveCreditsText";
-                saveCreditsLabel.Size = new Size(28, 28);
-                saveCreditsLabel.TabIndex = 4;
-                saveCreditsLabel.Text = "Credits:";
-                saveCreditsLabel.TextAlign = ContentAlignment.MiddleCenter;
+                TableLayoutPanel statsTable = new TableLayoutPanel();
+                statsTable.AutoSize = true;
+                statsTable.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                statsTable.BackColor = Color.Transparent;
+                statsTable.ColumnCount = 2;
+                statsTable.RowCount = 3;
+                statsTable.Dock = DockStyle.Right;
+                statsTable.Padding = new Padding(0, 0, Scaled(20), 0);
+                for (int column = 0; column < statsTable.ColumnCount; column++)
+                    statsTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                for (int row = 0; row < statsTable.RowCount; row++)
+                    statsTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / statsTable.RowCount));
 
-                saveQuotaLabel = new Label();
-                saveQuotaLabel.AutoSize = true;
-                saveQuotaLabel.BackColor = Color.Transparent;
-                saveQuotaLabel.Font = new Font("Segoe UI", 15F);
-                saveQuotaLabel.ForeColor = Color.FromArgb(77, 0, 20);
-                saveQuotaLabel.Location = new Point(labelsX, quotaY);
-                saveQuotaLabel.Name = "saveCreditsText";
-                saveQuotaLabel.Size = new Size(28, 28);
-                saveQuotaLabel.TabIndex = 4;
-                saveQuotaLabel.Text = "Quota:";
-                saveQuotaLabel.TextAlign = ContentAlignment.MiddleCenter;
-
-                saveDaysLabel = new Label();
-                saveDaysLabel.AutoSize = true;
-                saveDaysLabel.BackColor = Color.Transparent;
-                saveDaysLabel.Font = new Font("Segoe UI", 15F);
-                saveDaysLabel.ForeColor = Color.FromArgb(77, 0, 20);
-                saveDaysLabel.Location = new Point(labelsX, daysY);
-                saveDaysLabel.Name = "saveCreditsText";
-                saveDaysLabel.Size = new Size(28, 28);
-                saveDaysLabel.TabIndex = 4;
-                saveDaysLabel.Text = "Days:";
-                saveDaysLabel.TextAlign = ContentAlignment.MiddleCenter;
-
-                saveCreditsText = new Label();
-                saveCreditsText.AutoSize = true;
-                saveCreditsText.BackColor = Color.Transparent;
-                saveCreditsText.Font = new Font("Segoe UI", 15F);
-                saveCreditsText.ForeColor = Color.FromArgb(77, 0, 20);
-                saveCreditsText.Location = new Point(valuesX, creditsY);
-                saveCreditsText.Name = "saveCreditsText";
-                saveCreditsText.Size = new Size(28, 28);
-                saveCreditsText.TabIndex = 4;
-                saveCreditsText.Text = credits;
-                saveCreditsText.TextAlign = ContentAlignment.MiddleCenter;
-
-                saveQuotaText = new Label();
-                saveQuotaText.AutoSize = true;
-                saveQuotaText.BackColor = Color.Transparent;
-                saveQuotaText.Font = new Font("Segoe UI", 15F);
-                saveQuotaText.ForeColor = Color.FromArgb(77, 0, 20);
-                saveQuotaText.Location = new Point(valuesX, quotaY);
-                saveQuotaText.Name = "saveQuotaText";
-                saveQuotaText.Size = new Size(28, 28);
-                saveQuotaText.TabIndex = 4;
-                saveQuotaText.Text = quota;
-                saveQuotaText.TextAlign = ContentAlignment.MiddleCenter;
-
-                saveDaysText = new Label();
-                saveDaysText.AutoSize = true;
-                saveDaysText.BackColor = Color.Transparent;
-                saveDaysText.Font = new Font("Segoe UI", 15F);
-                saveDaysText.ForeColor = Color.FromArgb(77, 0, 20);
-                saveDaysText.Location = new Point(valuesX, daysY);
-                saveDaysText.Name = "saveDaysText";
-                saveDaysText.Size = new Size(28, 28);
-                saveDaysText.TabIndex = 4;
-                saveDaysText.Text = days;
-                saveDaysText.TextAlign = ContentAlignment.MiddleCenter;
+                statsTable.Controls.Add(saveCreditsLabel, 0, 0);
+                statsTable.Controls.Add(saveCreditsText, 1, 0);
+                statsTable.Controls.Add(saveQuotaLabel, 0, 1);
+                statsTable.Controls.Add(saveQuotaText, 1, 1);
+                statsTable.Controls.Add(saveDaysLabel, 0, 2);
+                statsTable.Controls.Add(saveDaysText, 1, 2);
 
                 deleteButton = new Button();
                 deleteButton.BackColor = Color.Transparent;
@@ -191,8 +155,8 @@ namespace LethalSaveManager.entity
                 deleteButton.FlatAppearance.BorderSize = 0;
                 deleteButton.FlatStyle = FlatStyle.Flat;
                 deleteButton.Image = Resources.x_image;
-                deleteButton.Size = new Size(50, 50);
-                deleteButton.Location = saveFileButton.Location + new Size(saveFileButton.Size.Width + 10, (saveFileButton.Size.Height / 2) - (deleteButton.Height / 2));
+                deleteButton.Size = new Size(Scaled(50), Scaled(50));
+                deleteButton.Location = saveFileButton.Location + new Size(saveFileButton.Size.Width + Scaled(10), (saveFileButton.Size.Height / 2) - (deleteButton.Height / 2));
                 deleteButton.Name = "deleteButton";
                 deleteButton.TabIndex = 48;
                 deleteButton.UseVisualStyleBackColor = false;
@@ -211,12 +175,7 @@ namespace LethalSaveManager.entity
                     RefreshPreservingSelection();
                 };
 
-                saveFileButton.Controls.Add(saveCreditsLabel);
-                saveFileButton.Controls.Add(saveQuotaLabel);
-                saveFileButton.Controls.Add(saveDaysLabel);
-                saveFileButton.Controls.Add(saveCreditsText);
-                saveFileButton.Controls.Add(saveQuotaText);
-                saveFileButton.Controls.Add(saveDaysText);
+                saveFileButton.Controls.Add(statsTable);
                 parent.Controls.Add(deleteButton);
             }
             parent.Controls.Add(saveFileButton);

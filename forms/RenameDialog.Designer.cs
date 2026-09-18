@@ -126,8 +126,8 @@
             // 
             // RenameDialog
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.FromArgb(154, 0, 0);
             ClientSize = new Size(294, 185);
             Controls.Add(panel2);
