@@ -19,16 +19,14 @@ You can download the latest standalone executable from the [releases page](https
 ## Screenshot 📸
 ![UI Screenshot](https://github.com/DanCommitsGit/LethalSaveManager/assets/61391827/377ec5f5-50bd-4c18-ae91-c49461d47bee)
 
-## Contributors 👥
-- [**DanCommitsGit**](https://github.com/DanCommitsGit)
+## Contributing 🤝
+Contributions are welcome! If you have suggestions for improvements or find any bugs, please feel free to submit an issue or a pull request.
 
-Originally based on [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager).
+## Credits
+Project was originally based on [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager).
 
 ## License 📜
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contributing 🤝
-Contributions are welcome! If you have suggestions for improvements or find any bugs, please feel free to submit an issue or a pull request.
 
 ## Download Count
 
