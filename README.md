@@ -32,3 +32,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ![GitHub release (v1)](https://img.shields.io/github/downloads/DanCommitsGit/LethalSaveManager/v1/total)
 ![GitHub release (v2)](https://img.shields.io/github/downloads/DanCommitsGit/LethalSaveManager/v2/total)
+![GitHub release (v3)](https://img.shields.io/github/downloads/DanCommitsGit/LethalSaveManager/v3/total)
