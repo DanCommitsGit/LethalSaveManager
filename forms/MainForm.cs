@@ -244,6 +244,11 @@ namespace LethalSaveManager
             Process.Start("explorer.exe", CustomBackupDirectory);
         }
 
+        private void openGitHubRepo_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/DanCommitsGit/LethalSaveManager") { UseShellExecute = true });
+        }
+
         private void refreshSaveList_Click(object sender, EventArgs e)
         {
             PopulateSaves();

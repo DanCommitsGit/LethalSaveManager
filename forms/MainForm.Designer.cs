@@ -44,6 +44,7 @@
             noBackupsFoundLabel = new Label();
             openGameSaveDirectory = new Button();
             openBackupSaveDirectory = new Button();
+            openGitHubRepo = new Button();
             appVersionLabel = new Label();
             appTitle = new Label();
             rootLayout = new TableLayoutPanel();
@@ -258,7 +259,25 @@
             openBackupSaveDirectory.Text = "[ Open Backup Save Directory ]";
             openBackupSaveDirectory.UseVisualStyleBackColor = false;
             openBackupSaveDirectory.Click += openBackupSaveDirectory_Click;
-            // 
+            //
+            // openGitHubRepo
+            //
+            openGitHubRepo.BackColor = Color.FromArgb(56, 0, 0);
+            openGitHubRepo.FlatAppearance.BorderSize = 0;
+            openGitHubRepo.FlatStyle = FlatStyle.Flat;
+            openGitHubRepo.Font = new Font("Segoe UI", 12F);
+            openGitHubRepo.ForeColor = Color.FromArgb(254, 101, 22);
+            openGitHubRepo.Anchor = AnchorStyles.None;
+            openGitHubRepo.AutoSize = true;
+            openGitHubRepo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            openGitHubRepo.Name = "openGitHubRepo";
+            openGitHubRepo.Padding = new Padding(14, 4, 14, 4);
+            openGitHubRepo.Margin = new Padding(8);
+            openGitHubRepo.TabIndex = 56;
+            openGitHubRepo.Text = "[ GitHub ]";
+            openGitHubRepo.UseVisualStyleBackColor = false;
+            openGitHubRepo.Click += openGitHubRepo_Click;
+            //
             // appVersionLabel
             // 
             appVersionLabel.AutoSize = true;
@@ -317,6 +336,7 @@
             rootLayout.Controls.Add(middleLayout, 1, 0);
             rootLayout.Controls.Add(backupSaveFilesPanelBackPanel, 2, 0);
             rootLayout.Controls.Add(openGameSaveDirectory, 0, 1);
+            rootLayout.Controls.Add(openGitHubRepo, 1, 1);
             rootLayout.Controls.Add(openBackupSaveDirectory, 2, 1);
             rootLayout.Dock = DockStyle.Fill;
             rootLayout.Name = "rootLayout";
@@ -361,6 +381,7 @@
         private Label backupSaveFileSectionTitle;
         private Button openGameSaveDirectory;
         private Button openBackupSaveDirectory;
+        private Button openGitHubRepo;
         private Label noBackupsFoundLabel;
         internal Button loadBackupButton;
         internal Button renameBackupButton;
