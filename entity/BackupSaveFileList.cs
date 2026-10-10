@@ -92,12 +92,6 @@ namespace LethalSaveManager.entity
                 selectedSaveFileIndex = lastButtonIndexCopy;
             };
 
-            for (int i = 20; i < saveFileButton.Text.Length; i += 20)
-            {
-                if (saveFileButton.Text.Length > i)
-                    saveFileButton.Text = saveFileButton.Text.Insert(i, Environment.NewLine);
-            }
-
             Label saveCreditsLabel = null;
             Label saveQuotaLabel = null;
             Label saveDaysLabel = null;
@@ -105,6 +99,7 @@ namespace LethalSaveManager.entity
             Label saveQuotaText = null;
             Label saveDaysText = null;
             Button deleteButton = null;
+            TableLayoutPanel statsTable = null;
 
             if (credits != "" && days != "" && quota != "")
             {
@@ -129,7 +124,7 @@ namespace LethalSaveManager.entity
                 saveQuotaText = NewStatLabel(quota);
                 saveDaysText = NewStatLabel(days);
 
-                TableLayoutPanel statsTable = new TableLayoutPanel();
+                statsTable = new TableLayoutPanel();
                 statsTable.AutoSize = true;
                 statsTable.AutoSizeMode = AutoSizeMode.GrowAndShrink;
                 statsTable.BackColor = Color.Transparent;
@@ -181,6 +176,9 @@ namespace LethalSaveManager.entity
             parent.Controls.Add(saveFileButton);
 
             LCSMUtility.UseLethalCompanyFont(saveFileButton);
+
+            if (statsTable != null)
+                saveFileButton.Padding = new Padding(0, 0, statsTable.GetPreferredSize(Size.Empty).Width - Scaled(10), 0);
 
             saveFileButtons.Add(new SaveFileButton(filePath, saveFileButton, saveCreditsLabel, saveQuotaLabel, saveDaysLabel, saveCreditsText, saveQuotaText, saveDaysText, deleteButton));
 
