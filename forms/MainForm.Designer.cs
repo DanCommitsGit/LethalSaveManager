@@ -268,7 +268,7 @@
             appVersionLabel.Name = "appVersionLabel";
             appVersionLabel.Size = new Size(27, 21);
             appVersionLabel.TabIndex = 52;
-            appVersionLabel.Text = "v2";
+            appVersionLabel.Text = "v3";
             // 
             // appTitle
             // 
