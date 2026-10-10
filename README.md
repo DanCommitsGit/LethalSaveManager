@@ -22,8 +22,8 @@ You can download the latest standalone executable from the [releases page](https
 ## Contributing 🤝
 Contributions are welcome! If you have suggestions for improvements or find any bugs, please feel free to submit an issue or a pull request.
 
-## Credits
-Project was originally based on [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager).
+## Credits 🙏
+This project was originally forked from [lawrencea13/LethalCompanySaveManager](https://github.com/lawrencea13/LethalCompanySaveManager) and has since been substantially rewritten.
 
 ## License 📜
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
